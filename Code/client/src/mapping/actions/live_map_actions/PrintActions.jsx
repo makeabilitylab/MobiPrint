@@ -10,6 +10,7 @@ import { distance2d } from "../../utils/touch_handling/TouchHandlingUtils";
 import { useAddPrintCommandMutation, useStartPrintQuery } from "../../api/mobiprinthooks";
 import axios from "axios";
 import { useSelectedFiles } from "../../../contexts/SelectedFilesContext";
+import { printerURL, getBackendURL } from "../../../config";
 
 
 
@@ -63,7 +64,7 @@ const PrintActions = (props) => {
         
         console.log("Sending Start Print Request for file named" + fileToPrint);
         // add delay to ensure robot is completely still before printer movements
-        axios.get("http://192.168.1.19/rr_gcode?gcode=M32%20"+ fileToPrint).then((response) => {
+        axios.get(`${printerURL()}/rr_gcode?gcode=M32%20` + fileToPrint).then((response) => {
             console.log(response);
         }).catch((error) => {
             console.log(error);
@@ -155,7 +156,7 @@ const PrintActions = (props) => {
             console.log("Modified filename:", modifiedFilename);
 
 
-            axios.post('http://127.0.0.1:5000/process-gcode', {
+            axios.post(`${getBackendURL()}/process-gcode`, {
                 filename: filename,
                 scale: printScale,
                 rotation: printAngle
@@ -167,7 +168,7 @@ const PrintActions = (props) => {
                     formData.append('file', new Blob([response.data], { type: 'application/octet-stream' }), `${modifiedFilename}`);
             
                     // Upload the modified GCode file to the 3D printer
-                    axios.post(`http://192.168.1.19/rr_upload?name=/gcodes/${modifiedFilename}`, formData, {
+                    axios.post(`${printerURL()}/rr_upload?name=/gcodes/${modifiedFilename}`, formData, {
                         headers: {
                             'Content-Type': 'multipart/form-data'
                         }

@@ -3,10 +3,11 @@ import { Capability } from "./types";
 import { floorObject } from "./utils";
 import { preprocessMap } from "./mapUtils";
 import ReconnectingEventSource from "reconnecting-eventsource";
-//DOUBLE CHECK THE APIT EVERYTIME THE ROBOT RECONNECTS TO THE NETWORK
+import { robotAPIBase } from "../../config";
+
+// Robot address is configurable on the Connect page (see src/config.js)
 export const valetudoAPI = axios.create({
-  baseURL: "http://192.168.1.18/api/v2",
-  
+  baseURL: robotAPIBase(),
   withCredentials: true,
 });
 let currentCommitId = "unknown";

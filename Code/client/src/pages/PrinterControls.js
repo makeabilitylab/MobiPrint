@@ -10,15 +10,14 @@ import Button from '@mui/material/Button';
 import SendIcon from '@mui/icons-material/Send';
 import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
-import { useOutletContext } from 'react-router-dom';
 import Box from '@mui/material/Box';
+import { printerURL } from '../config';
 
 
 
 export default function PrinterControls() {
 
-    // console.log("Printer IP: " + {printerIP});
-    const [printerIP, setPrinterIP] = useOutletContext();
+    const printerIP = printerURL();
 
     const sendGCode = (event) => {
         event.preventDefault();

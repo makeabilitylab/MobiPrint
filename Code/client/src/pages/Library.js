@@ -23,6 +23,7 @@ import axios from "axios";
 import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
 import { useSelectedFiles } from '../contexts/SelectedFilesContext';
+import { printerURL, getBackendURL } from '../config';
 
 
 //New floating action button to advance to the next page which is the planning page
@@ -82,7 +83,7 @@ export default function Library() {
     try {
       // Upload to the backend server
       try {
-        const backendResponse = await axios.post('http://127.0.0.1:5000/upload', formData, {
+        const backendResponse = await axios.post(`${getBackendURL()}/upload`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
@@ -97,7 +98,7 @@ export default function Library() {
       printerFormData.append('file', file);
   
       try {
-        const printerResponse = await axios.post('http://192.168.1.19/rr_upload?name=/gcodes/' + file.name, printerFormData, {
+        const printerResponse = await axios.post(`${printerURL()}/rr_upload?name=/gcodes/` + file.name, printerFormData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
@@ -235,7 +236,7 @@ export default function Library() {
                     <CardMedia
                       component="img" // Change from "div" to "img" to ensure the image is displayed.
                       sx={{ }} // Adjust the height as needed.
-                      image={`http://127.0.0.1:5000${file.thumbnail_path}`} // Assuming thumbnail_path is a relative URL.
+                      image={`${getBackendURL()}${file.thumbnail_path}`} // thumbnail_path is server-relative
                       alt={`Thumbnail for ${file.name}`}
                     />
                     <CardContent sx={{ flexGrow: 1 }}>

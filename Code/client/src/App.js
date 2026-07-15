@@ -17,9 +17,6 @@ const queryClient = new QueryClient();
 
 export default function App() {
 
-  
-  const [printerIP, setPrinterIP] = React.useState('');
-  const [robotIP, setRobotIP] = React.useState('');
   const [selectedFiles, setSelectedFiles] = useState({}); // Keep track of the selected files
 
 
@@ -43,7 +40,7 @@ export default function App() {
             >
             <Toolbar />
             <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
-              <Outlet context={[printerIP, setPrinterIP]}/>
+              <Outlet />
             </Container>
             </Box>
           </Box>
