@@ -1,35 +1,6 @@
 import React from "react";
-
-
-import {
-    Box,
-    Button,
-    CircularProgress,
-    Grid,
-    LinearProgress,
-    linearProgressClasses,
-    Paper,
-    styled,
-    Typography,
-    Stack
-} from "@mui/material";
-
-import {
-    useMapResetMutation,
-    useRobotMapQuery,
-    useStartMappingPassMutation,
-} from "./api";
-
-import {
-    Save as PersistentMapControlIcon,
-    Layers as MappingPassIcon,
-    LayersClear as MapResetIcon,
-    Dashboard as SegmentEditIcon,
-    Dangerous as VirtualRestrictionsIcon,
-    Crop as CleanupCoverageIcon,
-    Download as ValetudoMapDownloadIcon,
-} from "@mui/icons-material";
-
+import { Box, Button, styled, Stack } from "@mui/material";
+import { useMapResetMutation, useStartMappingPassMutation } from "./api";
 
 const  MapStatusContainer = styled(Box)(({ theme }) => {
     return {
@@ -76,7 +47,6 @@ const MapStatus = () => {
     const printStates = ["idle", "paused", "ready", "printing", "error"]
     const {mutate: startMappingPass, isLoading: mappingPassStarting} = useStartMappingPassMutation();
     const {mutate: resetMap, isLoading: mapResetting} = useMapResetMutation();
-
 
     
     return (

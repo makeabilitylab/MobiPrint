@@ -1,17 +1,13 @@
 import { ActionButton } from "../../Styled";
 import { useGoToMutation, useRobotStatusQuery } from "../../api";
 import React from "react";
-import { CircularProgress, Grid, Typography } from "@mui/material";
-// import { IntegrationHelpDialog } from "../../components/IntegrationHelpDialog";
+import { CircularProgress, Grid } from "@mui/material";
 import { useLongPress } from "use-long-press";
-import { floorObject } from "../../api/utils";
 
 //Actions for Testing mode
 
 const TestingActions = (props) => {
     const {testingGrids, testPoint, convertPixelCoordinatesToCMSpace, onClear, onMakeGrid, generateTestPoint, onReachedLocation, onRunTestSequence} = props;
-    // const [integrationHelpDialogOpen, setIntegrationHelpDialogOpen] = React.useState(false);
-    // const [integrationHelpDialogPayload, setIntegrationHelpDialogPayload] = React.useState("");
     const [statusChanges, setStatusChanges] = React.useState(0);
     const [previousStatus, setPreviousStatus] = React.useState("");
     
@@ -43,11 +39,6 @@ const TestingActions = (props) => {
         if (!testPoint) {
             return;
         }
-        // setIntegrationHelpDialogPayload(JSON.stringify({
-        //     action: "goto",
-        //     coordinates: floorObject(convertPixelCoordinatesToCMSpace({ x: testPoint.x0, y: testPoint.y0 })),
-        // }, null, 2));
-        // setIntegrationHelpDialogOpen(true);
     }, [testPoint, convertPixelCoordinatesToCMSpace]);
     const setupClickHandlers = useLongPress(handleLongClick, {
         onCancel: (event) => {

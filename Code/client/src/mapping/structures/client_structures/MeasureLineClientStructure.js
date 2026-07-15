@@ -1,5 +1,4 @@
 import ClientStructure from "./ClientStructure";
-import { calculateBoxAroundPoint, isInsideBox } from "../../utils/helpers";
 
 class MeasureLineClientStructure extends ClientStructure {
     constructor(x0, y0, x1, y1) {

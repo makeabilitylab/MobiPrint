@@ -1,12 +1,9 @@
 import axios from "axios";
-import ReconnectingEventSource from "reconnecting-eventsource";
+
 import { printerURL, getBackendURL } from "../../config";
-
-
 //////// PRINTER API //////////
 // https://github.com/Duet3D/RepRapFirmware/wiki/HTTP-requests
 // Printer address is configurable on the Connect page (see src/config.js)
-
 
 export const printerAPI = axios.create({
     baseURL: printerURL(),
@@ -29,7 +26,6 @@ export const mobiPrintAPI = axios.create({
     withCredentials: true,
 
   });
-
 
 //Get print files from backend server
 export const fetchPrintFiles = async () => {
@@ -61,5 +57,4 @@ export const addPrintFile = () => {
     console.log(error);
   });
 }
-
 

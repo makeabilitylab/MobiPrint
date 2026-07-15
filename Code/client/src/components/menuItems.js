@@ -2,7 +2,7 @@ import * as React from "react";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
-import ListSubheader from "@mui/material/ListSubheader";
+
 import MapIcon from '@mui/icons-material/Map';
 import ElectricalServicesIcon from "@mui/icons-material/ElectricalServices";
 import PendingActionsIcon from '@mui/icons-material/PendingActions';
@@ -10,7 +10,6 @@ import PermDataSettingIcon from '@mui/icons-material/PermDataSetting';
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import FolderIcon from '@mui/icons-material/Folder';
 import { Link } from 'react-router-dom';
-
 export const mainMenuItems = (
   <React.Fragment>
     <ListItemButton>
@@ -46,10 +45,8 @@ export const mainMenuItems = (
         </ListItemText>
     </ListItemButton>
 
-
   </React.Fragment>
 );
-
 
 // export const secondaryMenuItems = (
 //     <React.Fragment>
@@ -67,7 +64,6 @@ export const mainMenuItems = (
 //       </ListItemButton>
 //     </React.Fragment>
 //   );
-
 
 export const secondaryMenuItems = (
     <React.Fragment>

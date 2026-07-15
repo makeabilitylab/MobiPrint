@@ -1,5 +1,5 @@
 
-import { useQuery , useMutation, useQueryClient } from "react-query";
+import { useQuery , useMutation } from "react-query";
 import { addPrintCommand, addPrintFile, fetchPrintFiles } from "./mobiprintclient";
 
 
@@ -14,14 +14,10 @@ export const usePrintFilesQuery = () => {
 }
 
 export const useAddPrintFileMutation = () => {
-    // console.log("useAddPrintFileMutation");                 
-    const queryClient = useQueryClient();
     return useMutation(addPrintFile);
 }
 
 export const useAddPrintCommandMutation = () => {
-    // console.log("useAddPrintCommandMutation");
-    const queryClient = useQueryClient();
     return useMutation(addPrintCommand);
 }
 

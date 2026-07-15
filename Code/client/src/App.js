@@ -1,24 +1,21 @@
 import React from 'react';
-import { Typography } from '@mui/material';
-import { createBrowserRouter, BrowserRouter, Routes, RouterProvider, Route, Outlet, Link } from "react-router-dom";
-import { useLoaderData } from 'react-router-dom';
+
+import { Outlet } from "react-router-dom";
+
 import Dashboard from "./components/Dashboard";
 import Toolbar from "@mui/material/Toolbar";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
-import LinkRouter from "./components/LinkRouter";
+
 import { ReactQueryDevtools } from "react-query/devtools";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { SelectedFilesProvider } from './contexts/SelectedFilesContext';
 import { useState } from 'react';
-
-
 const queryClient = new QueryClient();
 
 export default function App() {
 
   const [selectedFiles, setSelectedFiles] = useState({}); // Keep track of the selected files
-
 
   return (
     <QueryClientProvider client={queryClient}>

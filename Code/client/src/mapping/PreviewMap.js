@@ -1,17 +1,15 @@
-import React, { useState } from "react";
-import { Box, Button, CircularProgress, styled, Typography, useTheme, Divider, Grid } from "@mui/material";
-import LiveMap from "./LiveMap";
+import React from "react";
+import { Box, Button, CircularProgress, styled, Typography } from "@mui/material";
+
 import "./ValetudoMap.css";
 import { Capability, useMapSegmentationPropertiesQuery, useRobotMapQuery } from "./api";
 import { useCapabilitiesSupported } from "./CapabilitiesProvider";
-import { QueryClient, QueryClientProvider } from "react-query";
+
 import CapabilitiesProvider from "./CapabilitiesProvider";
-import { createTheme, CssBaseline, ThemeProvider, useMediaQuery } from "@mui/material";
+import { createTheme } from "@mui/material";
 import { SnackbarProvider } from "notistack";
-import { Preview } from "@mui/icons-material";
+
 import PreviewLiveMap from "./PreviewLiveMap";
-
-
 const Container = styled(Box)({
   flex: "1",
   height: "100%",

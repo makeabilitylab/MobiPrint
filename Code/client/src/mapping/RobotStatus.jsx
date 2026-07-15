@@ -1,24 +1,8 @@
-import {
-    Box,
-    CircularProgress,
-    Grid,
-    LinearProgress,
-    linearProgressClasses,
-    Paper,
-    styled,
-    Typography,
-} from "@mui/material";
+import { Box, CircularProgress, Grid, LinearProgress, linearProgressClasses, Paper, styled, Typography } from "@mui/material";
 import { green, red, yellow } from "@mui/material/colors";
 import React from "react";
-import {
-    RobotAttributeClass,
-    useRobotAttributeQuery,
-    useRobotStatusQuery,
-} from "./api";
+import { RobotAttributeClass, useRobotAttributeQuery, useRobotStatusQuery } from "./api";
 import ActiveFilesList from "./ActiveFiles";
-import { useSelectedFiles } from "../contexts/SelectedFilesContext";
-
-
 
 const batteryLevelColors = {
     red: red[500],

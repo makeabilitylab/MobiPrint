@@ -1,10 +1,8 @@
-import { useGoToMutation, useRobotStatusQuery } from "../../api";
+
 import React from "react";
-import { CircularProgress, Grid, Typography } from "@mui/material";
+import { Grid } from "@mui/material";
 import { ActionButton } from "../../Styled";
 import { useLongPress } from "use-long-press";
-import { floorObject } from "../../api/utils";
-
 
 const MeasureActions = (props) => {
     const {onMakeMeasureLine, convertPixelCoordinatesToCMSpace, convertCMCoordinatesToPixelSpace} = props;
@@ -24,11 +22,6 @@ const MeasureActions = (props) => {
         // if (!goToTarget) {
         //     return;
         // }
-        // setIntegrationHelpDialogPayload(JSON.stringify({
-        //     action: "goto",
-        //     coordinates: floorObject(convertPixelCoordinatesToCMSpace({ x: goToTarget.x0, y: goToTarget.y0 })),
-        // }, null, 2));
-        // setIntegrationHelpDialogOpen(true);
     }, [convertPixelCoordinatesToCMSpace]);
     const setupClickHandlers = useLongPress(handleLongClick, {
         onCancel: (event) => {

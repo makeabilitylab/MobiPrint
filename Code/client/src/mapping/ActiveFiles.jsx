@@ -1,17 +1,7 @@
 // components/ActiveFilesList.js
 import React from 'react';
 import { useSelectedFiles } from '../contexts/SelectedFilesContext';
-import {
-    Box,
-    CircularProgress,
-    Grid,
-    LinearProgress,
-    linearProgressClasses,
-    Paper,
-    styled,
-    Typography,
-} from "@mui/material";
-
+import { Box, Grid, Paper, Typography } from "@mui/material";
 const ActiveFilesList = () => {
   const { selectedFiles } = useSelectedFiles();
   console.log("Selected Files: ", selectedFiles);

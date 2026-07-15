@@ -1,11 +1,10 @@
 # This will be the main file that will handle calls to the backend. 
 # It will be setup as a blueprint 
 
-from flask import Blueprint, jsonify, request, current_app, send_file
-import io 
+from flask import Blueprint, jsonify, request, send_file
+import io
 from .models import PrintFile
 from . import db
-# from flask_cors import CORS
 import os
 from werkzeug.utils import secure_filename
 import base64
@@ -14,7 +13,6 @@ from .scale_rotate_gcode import scale_rotate_gcode
 
 
 bp = Blueprint('mobiprint', __name__)
-# CORS(bp)
 
 # Set up directory for file uploads
 ALLOWED_EXTENSIONS = {'gcode'}
@@ -28,43 +26,15 @@ THUMBNAIL_FOLDER = os.path.join(UPLOAD_FOLDER, 'thumbnails')
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)  # Ensure the folder exists
 
-# if not os.path.exists(UPLOAD_FOLDER):
-#     os.makedirs(UPLOAD_FOLDER)
-
-# Configure Upload Folder to be used by Flask
-# current_app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-
 
 def allowed_file(filename):
     # check if the file has an allowed extension
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
-# def preload_default_models():
-#     default_models_dir = os.path.join(os.getcwd(), 'backend/default_models')
-
-#     with current_app.app_context():
-#         for filename in os.listdir(default_models_dir):
-#             if filename.endswith('.gcode') and not PrintFile.query.filter_by(name=filename).first():
-#                 file_path = os.path.join(default_models_dir, filename)
-#                 new_file = PrintFile(name=filename, description="Default 3D model", file_path=file_path)
-#                 db.session.add(new_file)
-#         db.session.commit()
-    # for filename in os.listdir(default_models_dir):
-    #     if filename.endswith('.gcode') and not PrintFile.query.filter_by(name=filename).first():
-    #         file_path = os.path.join(default_models_dir, filename)
-    #         new_file = PrintFile(name=filename, description="Default 3D model", file_path=file_path)
-    #         db.session.add(new_file)
-    # db.session.commit()
-
-# @bp.record_once
-# def initialize(self):
-#     preload_default_models()
-
 @bp.route('/get-files', methods=['GET'])
 def get_files():
     # Query all print files
-    # print("Getting files")
     files = PrintFile.query.all()
     # Serialize the data for JSON response
     files_data = [
@@ -85,29 +55,9 @@ def get_files():
 
 @bp.route('/add-file', methods=['POST'])
 def add_print_file():
-    #For testing just accept the request and return a message
+    # Stub: real uploads go through /upload
     print("Adding print file")
     return jsonify({"message": "File added successfully"}), 201
-    # return 1
-    # # Check if the post request has the file part
-    # if 'file' not in request.files:
-    #     return jsonify({"error": "No file part"}), 400
-    # file = request.files['file']
-    # # If the user does not select a file, the browser submits an
-    # # empty file without a filename.
-    # if file.filename == '':
-    #     return jsonify({"error": "No selected file"}), 400
-    # if file and allowed_file(file.filename):
-    #     filename = secure_filename(file.filename)
-    #     file_path = os.path.join(current_app.config['UPLOAD_FOLDER'], filename)
-    #     file.save(file_path)
-    #     # Here, add database entry for the file
-    #     new_file = PrintFile(name=filename, file_path=file_path)
-    #     db.session.add(new_file)
-    #     db.session.commit()
-    #     return jsonify(new_file.to_dict()), 201
-    # else:
-    #     return jsonify({"error": "Invalid file type"}), 400
 
 @bp.route('/<int:id>', methods=['DELETE'])
 def delete_print_file(id):
@@ -146,18 +96,8 @@ def add_print_command():
     description = r.get('description')
     location = r.get('location')
     print(r)
-    #Parse Json and create a new print command
+    # Stub: accepts and logs the command but does not persist it
     return jsonify({"message": "Print command added successfully"}), 201
-    # # Get the data from the request
-    # data = request.get_json()
-    # status = data.get('status')
-    # location = data.get('location')
-    # print_file_id = data.get('print_file_id')
-    # # Create a new print command
-    # new_command = PrintCommand(status=status, location=location, print_file_id=print_file_id)
-    # db.session.add(new_command)
-    # db.session.commit()
-    # return jsonify(new_command.to_dict()), 201
 
 @bp.route('/process-gcode', methods=['POST'])
 def process_gcode():

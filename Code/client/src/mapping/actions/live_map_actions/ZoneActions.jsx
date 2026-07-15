@@ -3,13 +3,10 @@ import React from "react";
 import { Box, Button, CircularProgress, Container, Grid, Typography } from "@mui/material";
 import { useLongPress } from "use-long-press";
 import { ActionButton } from "../../Styled";
-// import { IntegrationHelpDialog } from "../../components/IntegrationHelpDialog";
 import { IterationsIcon } from "../../assets/icon_components/IterationsIcon";
 const ZoneActions = (props) => {
     const { zones, convertPixelCoordinatesToCMSpace, onClear, onAdd } = props;
     const [iterationCount, setIterationCount] = React.useState(1);
-    // const [integrationHelpDialogOpen, setIntegrationHelpDialogOpen] = React.useState(false);
-    // const [integrationHelpDialogPayload, setIntegrationHelpDialogPayload] = React.useState("");
     const { data: status } = useRobotStatusQuery((state) => {
         return state.value;
     });
@@ -51,11 +48,6 @@ const ZoneActions = (props) => {
         cleanTemporaryZones(zonesForAPI);
     }, [canClean, didSelectZones, zonesForAPI, cleanTemporaryZones]);
     const handleLongClick = React.useCallback(() => {
-        // setIntegrationHelpDialogPayload(JSON.stringify({
-        //     action: "clean",
-        //     zones: zonesForAPI
-        // }, null, 2));
-        // setIntegrationHelpDialogOpen(true);
     }, [zonesForAPI]);
     const setupClickHandlers = useLongPress(handleLongClick, {
         onCancel: (event) => {
@@ -130,9 +122,6 @@ const ZoneActions = (props) => {
                         </Typography>
                     </Grid>}
             </Grid>
-            {/* <IntegrationHelpDialog dialogOpen={integrationHelpDialogOpen} setDialogOpen={(open) => {
-            setIntegrationHelpDialogOpen(open);
-        }} coordinatesWarning={true} helperText={"To start a cleanup of the currently drawn zones with the currently configured parameters via MQTT or REST, simply use this payload."} payload={integrationHelpDialogPayload}/> */}
         </>);
 };
 export default ZoneActions;

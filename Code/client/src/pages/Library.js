@@ -1,31 +1,28 @@
 import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
+
 import Button from '@mui/material/Button';
-import CameraIcon from '@mui/icons-material/PhotoCamera';
+
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
-import CssBaseline from '@mui/material/CssBaseline';
+
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
+
 import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { Fab } from '@mui/material';
 import RedoIcon from '@mui/icons-material/Redo';
-import Link from '@mui/material/Link';
-import { useState, useEffect } from 'react';
-import { useTheme, createTheme, ThemeProvider } from '@mui/material/styles';
+
+import { useTheme } from '@mui/material/styles';
 import { useAddPrintFileMutation, usePrintFilesQuery } from '../mapping/api/mobiprinthooks';
 import axios from "axios";
 import styled from '@emotion/styled';
 import { useNavigate } from 'react-router-dom';
 import { useSelectedFiles } from '../contexts/SelectedFilesContext';
 import { printerURL, getBackendURL } from '../config';
-
-
 //New floating action button to advance to the next page which is the planning page
 const NextButton = styled(Fab)(({ theme }) => {
   return {
@@ -50,9 +47,6 @@ export default function Library() {
   const navigate = useNavigate(); // Initialize the navigate function 
   const { selectedFiles, setSelectedFiles } = useSelectedFiles(); // Use the context to manage selected files
   const fileInputRef = React.useRef(null); // Create a reference to the file input element
-
-  // const { selectedFiles } = useSelectedFiles();
-
 
   // Check if no files have been selected to disable the Next button
   const isNextButtonDisabled = selectedFiles.length === 0;
@@ -119,37 +113,6 @@ export default function Library() {
     }
   };
   
-
-// // Function to handle file selection and upload
-//   const handleFileChange = async (event) => {
-//     const file = event.target.files[0];
-//     if (!file) return;
-
-//     const formData = new FormData();
-//     formData.append('file', file); // 'file' is the key expected on the server side
-
-//     try {
-//       const response = await axios.post('http://127.0.0.1:5000/upload', formData, {
-//         headers: {
-//           'Content-Type': 'multipart/form-data',
-//         },
-//       });
-//       console.log('File upload successful:', response.data);
-//       // Additional logic after successful upload (e.g., update state, notify user)
-//     } catch (error) {
-//       console.error('Error uploading file:', error);
-//       // Handle errors here (e.g., notify user of failure)
-//     }
-//   };
-  //   // Toggle file selection
-  // const toggleFileSelection = (fileId) => {
-  //     setSelectedFiles((currentSelectedFiles) =>
-  //       console.log("Selected FIles in Library: ", currentSelectedFiles),
-  //       currentSelectedFiles.includes(fileId)
-  //         ? currentSelectedFiles.filter((id) => id !== fileId) // Remove the file if it's already selected
-  //         : [...currentSelectedFiles, fileId] // Add the file if it's not already selected
-  //     );
-  // };
 
   const handleAddModelClick = () => {
     if (fileInputRef.current){

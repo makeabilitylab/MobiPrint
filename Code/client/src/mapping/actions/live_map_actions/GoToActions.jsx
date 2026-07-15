@@ -2,14 +2,11 @@ import { useGoToMutation, useRobotStatusQuery } from "../../api";
 import React from "react";
 import { CircularProgress, Grid, Typography } from "@mui/material";
 import { ActionButton } from "../../Styled";
-// import { IntegrationHelpDialog } from "/../components/IntegrationHelpDialog";
 import { useLongPress } from "use-long-press";
-import { floorObject } from "../../api/utils";
+
 const GoToActions = (props) => {
     const { goToTarget, convertPixelCoordinatesToCMSpace, onClear } = props;
 
-    // const [integrationHelpDialogOpen, setIntegrationHelpDialogOpen] = React.useState(false);
-    // const [integrationHelpDialogPayload, setIntegrationHelpDialogPayload] = React.useState("");
     const [statusChanges, setStatusChanges] = React.useState(0);
     const [previousStatus, setPreviousStatus] = React.useState("");
 
@@ -41,11 +38,6 @@ const GoToActions = (props) => {
         if (!goToTarget) {
             return;
         }
-        // setIntegrationHelpDialogPayload(JSON.stringify({
-        //     action: "goto",
-        //     coordinates: floorObject(convertPixelCoordinatesToCMSpace({ x: goToTarget.x0, y: goToTarget.y0 })),
-        // }, null, 2));
-        // setIntegrationHelpDialogOpen(true);
     }, [goToTarget, convertPixelCoordinatesToCMSpace]);
     const setupClickHandlers = useLongPress(handleLongClick, {
         onCancel: (event) => {
@@ -75,9 +67,6 @@ const GoToActions = (props) => {
                         </Typography>
                     </Grid>}
             </Grid>
-            {/* <IntegrationHelpDialog dialogOpen={integrationHelpDialogOpen} setDialogOpen={(open) => {
-            setIntegrationHelpDialogOpen(open);
-        }} helperText={"To trigger a \"Go To\" to the currently selected location via MQTT or REST, simply use this payload."} coordinatesWarning={true} payload={integrationHelpDialogPayload}/> */}
         </>);
 };
 export default GoToActions;

@@ -1,13 +1,11 @@
 from datetime import datetime
-from flask import Flask, Blueprint
+from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 import os
-from os import path
 
 db = SQLAlchemy()
 DB_NAME = "database.db"
-UPLOAD_FOLDER = 'uploads'
 
 def create_app(test_config=None):
     app = Flask(__name__)
@@ -16,8 +14,6 @@ def create_app(test_config=None):
     # configure the database
     app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
-    app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
     db.init_app(app)
 
@@ -36,19 +32,8 @@ def create_app(test_config=None):
     from . import mobiprint
     app.register_blueprint(mobiprint.bp)
 
-    #import the models 
-    from . import models
-
     return app
 
-
-def create_database(app):
-    if not path.exists('backend/' + DB_NAME):
-        with app.app_context():
-            db.create_all()
-            print('Database created!')
-    else:
-        print('Database already exists!')
 
 #function to preload default models
 def preload_default_models():

@@ -10,11 +10,9 @@ import RobotControls from "./pages/RobotControls";
 import Library from "./pages/Library";
 import Plan from "./pages/Plan";
 import Map from "./pages/Map";
-import { createBrowserRouter, BrowserRouter, Routes, RouterProvider, Route } from "react-router-dom";
-
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 const root = ReactDOM.createRoot(document.getElementById('root'));
 const defaultTheme = createTheme();
-
 
 const router = createBrowserRouter([
   { path: "/", 
@@ -34,6 +32,5 @@ root.render(
   <ThemeProvider theme={defaultTheme}>
     <CssBaseline />
       <RouterProvider router={router} />
-    {/* <App /> */}
   </ThemeProvider>
 );

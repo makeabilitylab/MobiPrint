@@ -10,12 +10,10 @@ import GoToTargetMapStructure from "./structures/map_structures/GoToTargetMapStr
 import TestPointClientStructure from "./structures/client_structures/TestPointClientStructure";
 import TestingGridClientStructure from "./structures/client_structures/TestingGridClientStructure";
 import { median } from "./utils/utils";
-import TestPrintObjectMapStructure from "./structures/map_structures/PrintObjectMapStructure";
+
 import TestPointLabelClientStructure from "./structures/client_structures/TestPointLabelStructure";
 import PrintObjectClientStructure from "./structures/client_structures/PrintObjectClientStructure";
 import PrintObjectMapStructure from "./structures/map_structures/PrintObjectMapStructure";
-
-
 class StructureManager {
     constructor() {
         this.pixelSize = 5;

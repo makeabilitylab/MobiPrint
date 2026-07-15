@@ -1,10 +1,7 @@
-import React from 'react'
-import ValetudoMap from '../mapping/ValetudoMap'
-import Box from '@mui/material/Box'
-import RobotStatus from '../mapping/RobotStatus'
+import React from 'react';
+import ValetudoMap from '../mapping/ValetudoMap';
+
 import { useLocation } from 'react-router-dom';
-
-
 function Plan() {
 
   const location = useLocation();

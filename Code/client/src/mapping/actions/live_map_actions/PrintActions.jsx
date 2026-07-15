@@ -1,21 +1,12 @@
 import { ActionButton } from "../../Styled";
-import Fab from '@mui/material/Fab'
-import { useGoToMutation, useRobotMapQuery, useRobotStatusQuery } from "../../api";
+
+import { useGoToMutation, useRobotStatusQuery } from "../../api";
 import React from "react";
-import { Grid, CircularProgress, Typography, styled, Box, Slider, Button } from "@mui/material";
-// import { IntegrationHelpDialog } from "../../components/IntegrationHelpDialog";
-import { useLongPress } from "use-long-press";
-import { floorObject } from "../../api/utils";
-import { distance2d } from "../../utils/touch_handling/TouchHandlingUtils";
-import { useAddPrintCommandMutation } from "../../api/mobiprinthooks";
+import { Grid, CircularProgress, Typography, styled, Box, Slider } from "@mui/material";
+
 import axios from "axios";
 import { useSelectedFiles } from "../../../contexts/SelectedFilesContext";
 import { printerURL, getBackendURL } from "../../../config";
-
-
-
-
-// const printFile = {file : "test.gcode", description: "Test Description", location: {x: 0, y: 0} , created_at : ""};
 
 const PrintActionsContainer = styled(Box)(({ theme }) => {
     return {
@@ -42,10 +33,6 @@ const PrintActions = (props) => {
     const [printScale, setPrintScale] = React.useState(1);
     const [printPlaced, setPrintPlaced] = React.useState(false);
     let fileToPrint = filename; // The file to print
-
-
-    //set a flag to say that the print command has been sent
-    // const [printCommandSent, setPrintCommandSent] = React.useState(false);
 
     const { data: status } = useRobotStatusQuery((state) => {
         if (previousStatus !== state.value) {
@@ -81,39 +68,9 @@ const PrintActions = (props) => {
         setPrintScale(newValue);
         onScale(newValue);
     };
-    const { mutate: goTo, isLoading: goToIsExecuting } = useGoToMutation({
-        // onSuccess: onClear,
-    });
-
-    // const {mutate : addPrintCommand, isLoading : addPrintCommandIsExecuting} = useAddPrintCommandMutation({
-    //     onSuccess: onClear,
-    // });
-
+    const { mutate: goTo, isLoading: goToIsExecuting } = useGoToMutation({});
 
     const canGo = status === "idle" || status === "docked" || status === "paused" || status === "returning" || status === "error";
-
-    //get the current robot position
-    const { data: map } = useRobotMapQuery();
-    map.entities.forEach((entity) => {
-        if (PrintObject && entity.type === "robot_position") {
-            // console.log(typeof entity.points[0]);
-            // console.log("Robot Position: ", entity.points);
-            const pixelRobotPoints = convertCMCoordinatesToPixelSpace({x: entity.points[0], y: entity.points[1] });
-            // console.log("Robot Position (in CM Space) ", entity.points);
-            const mappedPosition = convertPixelCoordinatesToCMSpace({ x: PrintObject.x0, y: PrintObject.y0 });
-            // console.log("printObject Position: in CM Space", mappedPosition.x, mappedPosition.y);
-            // console.log("distance in CM", distance2d(entity.points[0], entity.points[1], mappedPosition.x, mappedPosition.y));
-
-            // console.log("Robot Position (in Pixel Space) ", pixelRobotPoints);
-            // console.log("printObject Position: in Pixel Space", PrintObject.x0, PrintObject.y0);
-            // console.log("distance in Pixel Space", distance2d(pixelRobotPoints.x, pixelRobotPoints.y, PrintObject.x0, PrintObject.y0));
-            
-        }
-    });
-
-    // if {robotPosition.x === PrintObject.x0  && robotPosition.y === PrintObject.y0} {
-    //     onReachedLocation();
-    // }
 
     const getText = value => `${value}`
 
@@ -125,7 +82,6 @@ const PrintActions = (props) => {
             return;
         }
 
-
         const payload = {
             location : convertCMCoordinatesToPixelSpace({x: PrintObject.x0, y: PrintObject.y0}),
             file : filename,
@@ -136,9 +92,7 @@ const PrintActions = (props) => {
             created_at : new Date().toISOString()
         }
 
-        // console.log("Payload: ", payload);
-
-        // Check to see if edits were made to file 
+        // Check to see if edits were made to file
         if (printScale !== 1 || (printAngle !== 0 || printAngle !== 360)) {
                 // Modify the filename to reflect changes
             const fileExtension = filename.split('.').pop(); // Get the file extension
@@ -147,7 +101,6 @@ const PrintActions = (props) => {
 
             fileToPrint = modifiedFilename;
             console.log("Modified filename:", modifiedFilename);
-
 
             axios.post(`${getBackendURL()}/process-gcode`, {
                 filename: filename,
@@ -180,14 +133,6 @@ const PrintActions = (props) => {
             } else {
                 fileToPrint = filename;
             }
-
-
-        // addPrintCommand(payload);
-
-        // if (!canGo || !PrintObject) {
-        //     // "Cannot go to point while the robot is busy or no test point is generated"
-        //     return;
-        // }
 
         setStatusChanges(statusChanges + 1);
         goTo(convertPixelCoordinatesToCMSpace({ x: PrintObject.x0, y: PrintObject.y0 }));

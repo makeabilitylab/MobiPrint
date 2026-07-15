@@ -2,9 +2,6 @@ import React from 'react'
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
-// import Chart from '../components/Chart';
-import Deposits from '../components/Deposits';
-import Orders from '../components/Orders';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import SendIcon from '@mui/icons-material/Send';
@@ -21,24 +18,22 @@ export default function PrinterControls() {
 
     const sendGCode = (event) => {
         event.preventDefault();
-        console.log(event.target.gcode.value);
-        // fetch(`${printerIP}/rr_gcode?gcode=${event.target.gcode.value}`, {
-        //     method: 'GET',
-        //     headers: {
-        //         'Content-Type': 'application/json'
-        //     }
-        // }).then((response) => {
-        //     console.log(response)
-        //     if (response.status === 200) {
-        //         //on success, set printerIP in App.js
-        //         console.log("Sent G-Code");
-        //     } else {
-        //         //handle load failure
-        //         console.log("Failed to send G-Code");
-        //     } 
-        // }, (error) => {
-        //     console.log(error);
-        // });
+        fetch(`${printerIP}/rr_gcode?gcode=${event.target.gcode.value}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then((response) => {
+            console.log(response)
+            if (response.status === 200) {
+                console.log("Sent G-Code");
+            } else {
+                //handle load failure
+                console.log("Failed to send G-Code");
+            }
+        }, (error) => {
+            console.log(error);
+        });
     }
 
     const setAbsoluteMovement = () => {

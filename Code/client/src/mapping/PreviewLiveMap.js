@@ -2,22 +2,18 @@ import Map, { MapContainer, usePendingMapAction } from "./Map";
 import { Capability } from "./api";
 import GoToTargetClientStructure from "./structures/client_structures/GoToTargetClientStructure";
 import TestPointLabelClientStructure from "./structures/client_structures/TestPointLabelStructure";
-import { ActionsContainer } from "./Styled";
-import SegmentActions from "./actions/live_map_actions/SegmentActions";
+
 import SegmentLabelMapStructure from "./structures/map_structures/SegmentLabelMapStructure";
-import ZoneActions from "./actions/live_map_actions/ZoneActions";
+
 import ZoneClientStructure from "./structures/client_structures/ZoneClientStructure";
-import GoToActions from "./actions/live_map_actions/GoToActions";
-import TestingActions from "./actions/live_map_actions/TestingActions";
-import PrintActions from "./actions/live_map_actions/PrintActions";
+
 import React from "react";
 import { LiveMapModeSwitcher } from "./LiveMapModeSwitcher";
 import TestingGridClientStructure from "./structures/client_structures/TestingGridClientStructure";
 import TestPointClientStructure from "./structures/client_structures/TestPointClientStructure";
 import PrintObjectClientStructure from "./structures/client_structures/PrintObjectClientStructure";
-import RobotStatus from "./RobotStatus";
-import MapStatus from "./MapStatus";
 
+import MapStatus from "./MapStatus";
 const LIVE_MAP_MODE_LOCAL_STORAGE_KEY = "live-map-mode";
 class PreviewLiveMap extends Map {
     constructor(props) {
