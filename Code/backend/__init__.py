@@ -11,8 +11,7 @@ UPLOAD_FOLDER = 'uploads'
 
 def create_app(test_config=None):
     app = Flask(__name__)
-    app.debug = True
-    app.secret_key = "kjdanskdjbamsdbakjsndklan"
+    app.secret_key = os.environ.get("SECRET_KEY", "dev")
 
     # configure the database
     app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{DB_NAME}'
@@ -55,29 +54,19 @@ def create_database(app):
 def preload_default_models():
 
     from .models import PrintFile
-    default_models_dir = os.path.join(os.getcwd(), 'backend/static/default_models')
-    thumbnails_dir = os.path.join(default_models_dir, 'thumbnails')  # Path to the thumbnails directory
+    base_dir = os.path.dirname(__file__)
+    default_models_dir = os.path.join(base_dir, 'static', 'default_models')
 
     for filename in os.listdir(default_models_dir):
         if filename.endswith('.gcode'):
-            # Construct the file path for the .gcode file
-            file_path = os.path.join(default_models_dir, filename)
-
-            # Construct the file name and path for the corresponding thumbnail
-            thumbnail_filename = filename.replace('.gcode', '.png')  # Replace '.gcode' with '_cropped.png'
-            thumbnail_path = os.path.join(thumbnails_dir, thumbnail_filename)
-
-            # add the x y z dimensions of the model (TEST VALUES FOR NOW)
-            # THESE ARE CURRENTLY SET FOR CANE HOLDER 
-            # dimX = 150
-            # dimY = 150
-            # dimZ = 55
+            # Paths are stored relative to the backend package so DB records
+            # stay valid no matter where the repo lives or the app is launched from.
+            file_path = os.path.join('static', 'default_models', filename)
+            thumbnail_path = os.path.join('static', 'default_models', 'thumbnails', filename.replace('.gcode', '.png'))
 
             # Check if the file and its thumbnail are already in the database
-            if not PrintFile.query.filter_by(name=filename).first() and os.path.exists(thumbnail_path):
-                # Add the new file with its thumbnail path to the database
+            if not PrintFile.query.filter_by(name=filename).first() and os.path.exists(os.path.join(base_dir, thumbnail_path)):
                 new_file = PrintFile(name=filename, file_path=file_path, thumbnail_path=thumbnail_path, created_at=datetime.now())
-                                    #  , dimX=dimX, dimY=dimY, dimZ=dimZ)
                 db.session.add(new_file)
             else:
                 print(f"Skipping {filename} as it already exists or thumbnail is missing.")

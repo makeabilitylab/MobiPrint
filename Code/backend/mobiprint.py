@@ -19,6 +19,15 @@ bp = Blueprint('mobiprint', __name__)
 # Set up directory for file uploads
 ALLOWED_EXTENSIONS = {'gcode'}
 
+# Anchor upload paths to this package so they work regardless of the
+# directory the app is launched from. DB records store paths relative
+# to BASE_DIR.
+BASE_DIR = os.path.dirname(__file__)
+UPLOAD_FOLDER = os.path.join(BASE_DIR, 'static', 'default_models')
+THUMBNAIL_FOLDER = os.path.join(UPLOAD_FOLDER, 'thumbnails')
+
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)  # Ensure the folder exists
+
 # if not os.path.exists(UPLOAD_FOLDER):
 #     os.makedirs(UPLOAD_FOLDER)
 
@@ -64,8 +73,9 @@ def get_files():
             'name': file.name,
             'file_path': file.file_path,
             'created_at': file.created_at.strftime("%Y-%m-%d %H:%M:%S"),  # Format datetime for JSON serialization
-            #trim the path to trim everything before the static folder
-            'thumbnail_path': file.thumbnail_path.split('backend')[1]
+            # Paths are stored relative to the backend package; the leading
+            # slash makes this resolve to Flask's /static route.
+            'thumbnail_path': '/' + file.thumbnail_path
         }
         for file in files
     ]
@@ -149,12 +159,6 @@ def add_print_command():
     # db.session.commit()
     # return jsonify(new_command.to_dict()), 201
 
-# Define the upload folder
-UPLOAD_FOLDER = 'backend/static/default_models'
-THUMBNAIL_FOLDER = 'backend/static/default_models/thumbnails'
-
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)  # Ensure the folder exists
-
 @bp.route('/process-gcode', methods=['POST'])
 def process_gcode():
     print("Processing GCode")
@@ -191,28 +195,23 @@ def upload_file():
     file = request.files['file']
     if file.filename == '':
         return jsonify({'error': 'No selected file'}), 400
-    if file:
-        print("adding file")
-        filename = secure_filename(file.filename)
-        save_path = os.path.join(UPLOAD_FOLDER, filename)
-        file.save(save_path)
-        extract_thumbnail(save_path)
+    if not allowed_file(file.filename):
+        return jsonify({'error': 'Only .gcode files are allowed'}), 400
 
-        # thumbnails_dir = os.path.join(os.path.dirname(filename), 'thumbnails')
-        # gcode_filename = os.path.basename(filename)
-        output_image = os.path.join(THUMBNAIL_FOLDER, os.path.splitext(filename)[0] + '.png')
+    filename = secure_filename(file.filename)
+    save_path = os.path.join(UPLOAD_FOLDER, filename)
+    file.save(save_path)
+    extract_thumbnail(save_path)
 
-        # Create an instance of PrintFile
-        new_file = PrintFile(name=filename, file_path=save_path, thumbnail_path=output_image, created_at=datetime.now())
-        db.session.add(new_file)  # Add new object to session
-        db.session.commit()  # Commit the transaction
+    # Store paths relative to the backend package (see BASE_DIR above)
+    file_path = os.path.join('static', 'default_models', filename)
+    thumbnail_path = os.path.join('static', 'default_models', 'thumbnails', os.path.splitext(filename)[0] + '.png')
 
-        get_files()
-        return jsonify({'message': 'File successfully uploaded', 'path': save_path}), 200
+    new_file = PrintFile(name=filename, file_path=file_path, thumbnail_path=thumbnail_path, created_at=datetime.now())
+    db.session.add(new_file)
+    db.session.commit()
 
-def allowed_file(filename):
-    return '.' in filename and \
-           filename.rsplit('.', 1)[1].lower() in {'gcode'}
+    return jsonify({'message': 'File successfully uploaded', 'path': file_path}), 200
 
 
 def extract_thumbnail(gcode_file):

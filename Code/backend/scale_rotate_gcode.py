@@ -50,8 +50,8 @@ def scale_rotate_gcode(input_file, scale_factor, angle, output_stream):
                 layer_index += 1
 
             if line.startswith('G1 ') and (' X' in line or ' Y' in line):
-                x_match = re.search(' X([-\d.]+)', line)
-                y_match = re.search(' Y([-\d.]+)', line)
+                x_match = re.search(r' X([-\d.]+)', line)
+                y_match = re.search(r' Y([-\d.]+)', line)
                 if x_match and y_match:
                     x_val = float(x_match.group(1))
                     y_val = float(y_match.group(1))
@@ -62,8 +62,8 @@ def scale_rotate_gcode(input_file, scale_factor, angle, output_stream):
                     x_rotated = (x_scaled - original_centroid_x) * math.cos(angle_rad) - (y_scaled - original_centroid_y) * math.sin(angle_rad) + original_centroid_x
                     y_rotated = (x_scaled - original_centroid_x) * math.sin(angle_rad) + (y_scaled - original_centroid_y) * math.cos(angle_rad) + original_centroid_y
 
-                    new_line = re.sub(' X[-\d.]+', f' X{x_rotated:.3f}', line)
-                    new_line = re.sub(' Y[-\d.]+', f' Y{y_rotated:.3f}', new_line)
+                    new_line = re.sub(r' X[-\d.]+', f' X{x_rotated:.3f}', line)
+                    new_line = re.sub(r' Y[-\d.]+', f' Y{y_rotated:.3f}', new_line)
                     line = new_line
                     scaled_lines.append(line)
                     continue
