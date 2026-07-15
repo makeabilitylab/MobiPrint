@@ -52,13 +52,10 @@ class StructureManager {
                 case RawMapEntityType.GoToTarget: {
                     const p0 = this.convertCMCoordinatesToPixelSpace({ x: e.points[0], y: e.points[1] });
                     // const result = this.getClientStructures().filter(s => s.type === "PrintObjectClientStructure");
-                    // console.log(this.getClientStructures());
                     // if (this.getClientStructures().filter(s => s.type === "PrintObjectClientStructure")) {
-                    //     console.log("Printing 'MAP' Object found")
                     //     mapStructures.push(new PrintObjectMapStructure(p0.x, p0.y));
                     //     break;
                     // } else {
-                    // console.log("Printing 'MAP' Object not found - using default")
                     mapStructures.push(new GoToTargetMapStructure(p0.x, p0.y));
                     break;
                     // }

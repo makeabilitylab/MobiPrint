@@ -77,12 +77,11 @@ export default function Library() {
     try {
       // Upload to the backend server
       try {
-        const backendResponse = await axios.post(`${getBackendURL()}/upload`, formData, {
+        await axios.post(`${getBackendURL()}/upload`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
         });
-        console.log('File upload to backend successful:', backendResponse.data);
       } catch (error) {
         console.error('Error uploading file to backend server:', error.response ? error.response.data : error.message);
       }
@@ -97,11 +96,8 @@ export default function Library() {
             'Content-Type': 'multipart/form-data',
           },
         });
-        console.log('File upload to printer successful:', printerResponse.data);
   
-        if (printerResponse.data.err === 0) {
-          console.log('File uploaded to 3D printer successfully.');
-        } else {
+        if (printerResponse.data.err !== 0) {
           console.error('Error from printer response:', printerResponse.data.err);
         }
       } catch (error) {
@@ -118,7 +114,6 @@ export default function Library() {
     if (fileInputRef.current){
       fileInputRef.current.click();
     }
-    console.log("Add Model Clicked");
   }
 
   if (isLoading) {
@@ -131,8 +126,6 @@ export default function Library() {
     return <div>No files found in database</div>
   }
 
-  // print out the file name and thumbnail path for each file
-  console.log("Files: ", files);
 
   return (
 

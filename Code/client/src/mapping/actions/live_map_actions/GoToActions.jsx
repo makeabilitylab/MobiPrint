@@ -16,7 +16,6 @@ const GoToActions = (props) => {
             setStatusChanges(statusChanges + 1);
         } 
         if ( previousStatus !== state.value && statusChanges > 1 && state.value === "idle") {
-            console.log("Destination Reached");
         }
         return state.value;
     });

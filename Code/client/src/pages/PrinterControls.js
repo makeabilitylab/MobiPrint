@@ -16,124 +16,39 @@ export default function PrinterControls() {
 
     const printerIP = printerURL();
 
-    const sendGCode = (event) => {
-        event.preventDefault();
-        fetch(`${printerIP}/rr_gcode?gcode=${event.target.gcode.value}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }).then((response) => {
-            console.log(response)
-            if (response.status === 200) {
-                console.log("Sent G-Code");
-            } else {
-                //handle load failure
-                console.log("Failed to send G-Code");
-            }
-        }, (error) => {
-            console.log(error);
-        });
-    }
-
-    const setAbsoluteMovement = () => {
-        fetch(`${printerIP}/rr_gcode?gcode=G90`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-            }).then((response) => {
-                console.log(response)
-                if (response.status === 200) {
-                    //on success, set printerIP in App.js
-                    console.log("Set absolute movement");
-                } else {
-                    //handle load failure
-                    console.log("Failed to set absolute movement");
+    // Send a single gcode command to the Duet printer; logs only failures
+    const sendPrinterGCode = (gcode, description) => {
+        return fetch(`${printerIP}/rr_gcode?gcode=${gcode}`, { method: 'GET' })
+            .then((response) => {
+                if (response.status !== 200) {
+                    console.error(`Failed to ${description} (HTTP ${response.status})`);
                 }
             }, (error) => {
-                console.log(error);
+                console.error(`Failed to ${description}:`, error);
             });
-        };
+    }
 
-    const setRelativeMovement = () => {
-        fetch(`${printerIP}/rr_gcode?gcode=G91`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-                }   
-            }).then((response) => {
-                console.log(response)
-                if (response.status === 200) {
-                    //on success, set printerIP in App.js
-                    console.log("Set relative movement");
-                } else {
-                    //handle load failure   
-                    console.log("Failed to set relative movement");
-                } 
-            }, (error) => {
-                console.log(error);
-            });
-        };
+    const sendGCode = (event) => {
+        event.preventDefault();
+        sendPrinterGCode(event.target.gcode.value, "send G-Code");
+    }
+
+    const setAbsoluteMovement = () => sendPrinterGCode("G90", "set absolute movement");
+
+    const setRelativeMovement = () => sendPrinterGCode("G91", "set relative movement");
 
     const handleJogButtonClick = (event, axis, distance) => {
-        //Set to Relative Positioning 
+        //Set to Relative Positioning
         setRelativeMovement();
         //Send Jog Command
-        fetch(`${printerIP}/rr_gcode?gcode=G0 ${axis}${distance}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }).then((response) => {
-            console.log(response)
-            if (response.status === 200) {
-                //on success, set printerIP in App.js
-                console.log("Jogging " + axis + " " + distance);
-            } else {
-                //handle load failure
-                console.log("Failed to Jog " + axis + " " + distance);
-            }
-        });
+        sendPrinterGCode(`G0 ${axis}${distance}`, `jog ${axis} ${distance}`);
         //Set Back to Absolute Positioning
         setAbsoluteMovement();
     }
-    
-    const handleEmergencyStop = () => {
-        fetch(`${printerIP}/rr_gcode?gcode=M112`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }).then((response) => {
-            console.log(response)
-            if (response.status === 200) {
-                console.log("Emergency Stop");
-            } else {
-                //handle load failure
-                console.log("Failed to Emergency Stop");
-            }
-        });
-    }
-    
-    const homeAxis = (event, axis) => {
-        console.log("Homing " + axis);
-        fetch(`${printerIP}/rr_gcode?gcode=G28 ${axis}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }).then((response) => {
-            console.log(response)
-            if (response.status === 200) {
-                //on success, set printerIP in App.js
-                console.log("Homing " + axis);
-            } else {
-                //handle load failure
-                console.log("Failed to Home " + axis);
-            }
-        });
-    }
+
+    const handleEmergencyStop = () => sendPrinterGCode("M112", "emergency stop");
+
+    const homeAxis = (event, axis) => sendPrinterGCode(`G28 ${axis}`, `home ${axis}`);
 
   return (
     

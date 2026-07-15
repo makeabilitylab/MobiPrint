@@ -1,6 +1,5 @@
 import { PROCESS_LAYERS } from "./MapLayerManagerUtils";
 
-console.log('MapLayerManager.worker is running in', this === undefined ? 'strict' : 'non-strict', 'mode');
 
 let cachedLayers = [];
 window.self.postMessage({

@@ -82,7 +82,6 @@ const RobotStatus = () => {
         if (status === undefined) {
             return null;
         }
-        console.log("status.value: ", status.value);
         return (
             <Typography variant="overline" color="textSecondary">
                 {status.value}
@@ -101,13 +100,10 @@ const RobotStatus = () => {
         }
 
         if (batteries.length === 0) {
-            console.log("No batteries found");
             return <Typography color="textSecondary">No batteries found</Typography>;
         }
 
         return batteries.map((battery, index) => (
-
-            console.log("Battery Level: ", battery.level),
             <Grid container key={index.toString()} direction="column" spacing={1}>
                 <Grid item>
                     <Box display="flex" alignItems="center" minWidth={100}>

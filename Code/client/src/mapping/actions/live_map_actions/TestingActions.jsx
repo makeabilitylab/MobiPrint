@@ -17,7 +17,6 @@ const TestingActions = (props) => {
             setStatusChanges(statusChanges + 1);
         } 
         if ( previousStatus !== state.value && statusChanges > 1 && state.value === "idle") {
-            console.log("Destination Reached");
             onReachedLocation();
         }
         return state.value;

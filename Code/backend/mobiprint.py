@@ -84,7 +84,6 @@ def check_models():
 
 @bp.route('/test', methods=['GET'])
 def test_route():
-    print("Test route hit")
     return jsonify({"message": "Test route successful"})
 
 
@@ -101,7 +100,6 @@ def add_print_command():
 
 @bp.route('/process-gcode', methods=['POST'])
 def process_gcode():
-    print("Processing GCode")
     try:
         # Extract data from the request
         data = request.json

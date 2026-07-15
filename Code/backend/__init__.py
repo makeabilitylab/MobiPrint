@@ -24,8 +24,10 @@ def create_app(test_config=None):
         db.create_all()  # Ensure all tables are created
         preload_default_models()  # Preload the default models
 
-    # enable CORS
-    CORS(app, resources={r'/*': {'origins': '*'}}, supports_credentials=True)
+    # Enable CORS for all routes. The app runs on a trusted local network;
+    # no credentials are used, so a wildcard origin is fine (and browsers
+    # reject the wildcard+credentials combination anyway).
+    CORS(app, resources={r'/*': {'origins': '*'}})
     
     
     # import and register the blueprint

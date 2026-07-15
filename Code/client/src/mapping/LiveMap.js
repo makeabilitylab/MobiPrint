@@ -148,7 +148,6 @@ class LiveMap extends Map {
                 break;
             }
             case "measure": {
-                console.log("Clicked while in Measure Mode");
                 // this.structureManager.addClientStructure(new MeasureLineClientStruture(tappedPointInMapSpace.x, tappedPointInMapSpace.y));
                 // this.updateState();
                 // return true;
@@ -388,7 +387,6 @@ class LiveMap extends Map {
                     this.updateState();
                     this.draw();
                 }} onReachedLocation={() => {
-                    console.log("Location Sent");
                 }}
                 
               />}

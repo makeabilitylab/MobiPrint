@@ -48,13 +48,8 @@ const PrintActions = (props) => {
     });
 
     const sendStartPrintRequest = () => {
-        
-        console.log("Sending Start Print Request for file named" + fileToPrint);
-        // add delay to ensure robot is completely still before printer movements
-        axios.get(`${printerURL()}/rr_gcode?gcode=M32%20` + fileToPrint).then((response) => {
-            console.log(response);
-        }).catch((error) => {
-            console.log(error);
+        axios.get(`${printerURL()}/rr_gcode?gcode=M32%20` + fileToPrint).catch((error) => {
+            console.error("Failed to start print:", error);
         });
     }
 
@@ -77,8 +72,7 @@ const PrintActions = (props) => {
     const handleClick = React.useCallback(() => {
 
         if (!canGo) {
-            // "Cannot go to point while the robot is busy"
-            console.log("Cannot go to point while the robot is busy");
+            console.warn("Cannot go to point while the robot is busy");
             return;
         }
 
@@ -100,7 +94,6 @@ const PrintActions = (props) => {
             const modifiedFilename = `${baseFilename}_modified_scale${printScale}_rotate${printAngle}.${fileExtension}`;
 
             fileToPrint = modifiedFilename;
-            console.log("Modified filename:", modifiedFilename);
 
             axios.post(`${getBackendURL()}/process-gcode`, {
                 filename: filename,
@@ -108,7 +101,6 @@ const PrintActions = (props) => {
                 rotation: printAngle
             }, { responseType: 'blob' })  // Expecting a blob as the response
                 .then(response => {
-                    console.log("Backend response received");
             
                     const formData = new FormData();
                     formData.append('file', new Blob([response.data], { type: 'application/octet-stream' }), `${modifiedFilename}`);
@@ -118,9 +110,6 @@ const PrintActions = (props) => {
                         headers: {
                             'Content-Type': 'multipart/form-data'
                         }
-                    })
-                    .then(printerResponse => {
-                        console.log("Printer response after backend processing:", printerResponse);
                     })
                     .catch(printerError => {
                         console.error("Error sending processed file to 3D printer:", printerError);

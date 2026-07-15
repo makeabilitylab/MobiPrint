@@ -2,7 +2,6 @@ import re
 import math
 
 def scale_rotate_gcode(input_file, scale_factor, angle, output_stream):
-    print("Scaling and rotating GCode")
     layer_height = 0.3  # Must match the layer height the gcode was sliced with
     z_movement_pattern = re.compile(r'G1 .*Z(\d*\.\d+|\d+\.\d*)')
     z_comment_pattern = re.compile(r'^;Z:(\d*\.\d+|\d+\.\d*)')

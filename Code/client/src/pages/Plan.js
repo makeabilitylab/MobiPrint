@@ -7,7 +7,6 @@ function Plan() {
   const location = useLocation();
   const { selectedFiles } = location.state || {};
 
-  // console.log("Selected Files: ", selectedFiles);
   return (
     <>
       <ValetudoMap />

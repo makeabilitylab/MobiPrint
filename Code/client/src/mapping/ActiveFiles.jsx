@@ -4,10 +4,8 @@ import { useSelectedFiles } from '../contexts/SelectedFilesContext';
 import { Box, Grid, Paper, Typography } from "@mui/material";
 const ActiveFilesList = () => {
   const { selectedFiles } = useSelectedFiles();
-  console.log("Selected Files: ", selectedFiles);
 
   return (
-    // "console.log("Selected Files: ", selectedFile),"
 
     //iterate through the selected files and display them in console
     

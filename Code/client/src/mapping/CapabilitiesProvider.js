@@ -18,14 +18,12 @@ const CapabilitiesProvider = (props) => {
     const snackbarKey = React.useRef();
     React.useEffect(() => {
         if (capabilitiesLoadError || snackbarKey.current === undefined) {
-            console.log("capabilitiesLoadError: " + capabilitiesLoadError);
             return;
         }
         closeSnackbar(snackbarKey.current);
     }, [closeSnackbar, capabilitiesLoadError]);
     React.useEffect(() => {
         if (!capabilitiesLoadError) {
-            console.log("capabilitiesLoaded");
             return;
         }
         const SnackbarAction = () => {
