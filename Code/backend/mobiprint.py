@@ -166,19 +166,30 @@ def process_gcode():
         # Extract data from the request
         data = request.json
         filename = data.get('filename')
-        # new_filename = data.get('newFilename')
         scale = data.get('scale')
         rotation = data.get('rotation')
 
         if not filename or scale is None or rotation is None:
-            return jsonify({"error": "Missing required parameters"}), 400
+            return jsonify({"error": "Missing required parameters: filename, scale, rotation"}), 400
 
-        input_file_path = os.path.join(UPLOAD_FOLDER, filename)
-    
+        try:
+            scale = float(scale)
+            rotation = float(rotation)
+        except (TypeError, ValueError):
+            return jsonify({"error": "scale and rotation must be numbers"}), 400
+
+        input_file_path = os.path.join(UPLOAD_FOLDER, secure_filename(filename))
+        if not os.path.isfile(input_file_path):
+            return jsonify({"error": f"GCode file '{filename}' not found on the server"}), 404
+
         modified_file_buffer = io.BytesIO()
 
         # Process the GCode file
-        scale_rotate_gcode(input_file_path, scale, rotation, modified_file_buffer)
+        try:
+            scale_rotate_gcode(input_file_path, scale, rotation, modified_file_buffer)
+        except ValueError as e:
+            # Unusable gcode (e.g. sliced without the provided PrusaSlicer profile)
+            return jsonify({"error": str(e)}), 400
 
         # Send the modified GCode back to the client
         modified_file_buffer.seek(0)
@@ -201,7 +212,12 @@ def upload_file():
     filename = secure_filename(file.filename)
     save_path = os.path.join(UPLOAD_FOLDER, filename)
     file.save(save_path)
-    extract_thumbnail(save_path)
+
+    if extract_thumbnail(save_path) is None:
+        os.remove(save_path)
+        return jsonify({'error': 'GCode file has no embedded thumbnail. '
+                                 'Re-slice with the provided PrusaSlicer profile '
+                                 '(thumbnails must be enabled).'}), 400
 
     # Store paths relative to the backend package (see BASE_DIR above)
     file_path = os.path.join('static', 'default_models', filename)
@@ -215,10 +231,15 @@ def upload_file():
 
 
 def extract_thumbnail(gcode_file):
+    """Extract the PrusaSlicer-embedded thumbnail PNG from a gcode file.
+
+    Returns the path of the written image, or None if the file has no
+    (decodable) embedded thumbnail.
+    """
     # Ensure the 'thumbnails' directory exists
     thumbnails_dir = os.path.join(os.path.dirname(gcode_file), 'thumbnails')
     os.makedirs(thumbnails_dir, exist_ok=True)
-    
+
     # Generate the output image path
     gcode_filename = os.path.basename(gcode_file)
     output_image = os.path.join(thumbnails_dir, os.path.splitext(gcode_filename)[0] + '.png')
@@ -240,15 +261,21 @@ def extract_thumbnail(gcode_file):
             # Remove the leading comment markers
             thumbnail_data.append(line.strip().lstrip('; '))
 
+    if not thumbnail_data:
+        print(f"No embedded thumbnail found in {gcode_file}")
+        return None
+
     # Join all parts and decode
     thumbnail_data_str = ''.join(thumbnail_data)
-    
+
     try:
         thumbnail_bytes = base64.b64decode(thumbnail_data_str)
         with open(output_image, 'wb') as img_file:
             img_file.write(thumbnail_bytes)
         print(f"Thumbnail extracted and saved as {output_image}")
+        return output_image
     except Exception as e:
         print(f"An error occurred while decoding the thumbnail data: {e}")
+        return None
 
     

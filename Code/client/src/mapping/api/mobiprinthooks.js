@@ -1,13 +1,12 @@
 
 import { useQuery , useMutation, useQueryClient } from "react-query";
-import { addPrintCommand, addPrintFile, fetchPrintFiles, startPrint} from "./mobiprintclient";
+import { addPrintCommand, addPrintFile, fetchPrintFiles } from "./mobiprintclient";
 
 
-var QueryKeys; 
+var QueryKeys;
 
 (function (QueryKeys) {
     QueryKeys["PrintFiles"] = "printFiles";
-    QueryKeys["StartPrint"] = "startPrint";
 })(QueryKeys || (QueryKeys = {}));
 
 export const usePrintFilesQuery = () => {
@@ -21,15 +20,13 @@ export const useAddPrintFileMutation = () => {
 }
 
 export const useAddPrintCommandMutation = () => {
-    // console.log("useAddPrintCommandMutation");                 
+    // console.log("useAddPrintCommandMutation");
     const queryClient = useQueryClient();
     return useMutation(addPrintCommand);
 }
 
-
-///// DUET 3D PRINTER HOOKS //////
-
-export const useStartPrintQuery = (printFile) => {
-    console.log("Starting Print: ", printFile);
-    return useQuery(QueryKeys.StartPrint, startPrint(printFile));
-}
+// NOTE: a useStartPrintQuery hook used to live here. It called
+// startPrint(printFile) during render (instead of passing a function to
+// react-query), which fired a real M32 print command at the printer every
+// time the component rendered. Start prints imperatively instead, e.g. via
+// startPrint() in mobiprintclient.js, from an explicit user action.

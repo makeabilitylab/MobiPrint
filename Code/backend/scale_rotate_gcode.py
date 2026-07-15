@@ -4,21 +4,23 @@ import io
 
 def scale_rotate_gcode(input_file, scale_factor, angle, output_stream):
     print("Scaling and rotating GCode")
-    layer_height = 0.3  # Fixed layer height in mm
-    z_values = []  # Store Z values for each layer change
+    layer_height = 0.3  # Must match the layer height the gcode was sliced with
     z_movement_pattern = re.compile(r'G1 .*Z(\d*\.\d+|\d+\.\d*)')
     z_comment_pattern = re.compile(r'^;Z:(\d*\.\d+|\d+\.\d*)')
     centroid_x_pattern = re.compile(r';firstLayerCenterX = (\d*\.\d+|\d+\.?\d*)')
     centroid_y_pattern = re.compile(r';firstLayerCenterY = (\d*\.\d+|\d+\.?\d*)')
+    layer_height_pattern = re.compile(r'^; layer_height = (\d*\.?\d+)')
 
     current_z_height = 0.0
     layer_index = 0
     scaled_lines = []
     original_centroid_x = original_centroid_y = None
+    sliced_layer_height = None
 
     angle_rad = math.radians(angle)
 
-    # Read the original centroid coordinates
+    # Pre-pass: read the first-layer centroid and the layer height the file
+    # was actually sliced with (both are PrusaSlicer-generated comments).
     with open(input_file, 'r') as infile:
         for line in infile:
             centroid_x_match = centroid_x_pattern.match(line)
@@ -27,8 +29,21 @@ def scale_rotate_gcode(input_file, scale_factor, angle, output_stream):
             centroid_y_match = centroid_y_pattern.match(line)
             if centroid_y_match:
                 original_centroid_y = float(centroid_y_match.group(1))
-            if original_centroid_x and original_centroid_y:
-                break
+            layer_height_match = layer_height_pattern.match(line)
+            if layer_height_match:
+                sliced_layer_height = float(layer_height_match.group(1))
+
+    # Fail loudly rather than emit geometrically wrong gcode: both checks
+    # protect against files sliced without the provided PrusaSlicer profile.
+    if original_centroid_x is None or original_centroid_y is None:
+        raise ValueError(
+            "GCode file is missing the 'firstLayerCenterX/Y' comments needed to "
+            "scale and rotate. Re-slice the model with the provided PrusaSlicer profile.")
+    if sliced_layer_height is not None and abs(sliced_layer_height - layer_height) > 1e-6:
+        raise ValueError(
+            f"GCode was sliced with a {sliced_layer_height} mm layer height, but this "
+            f"transform assumes {layer_height} mm, so the output Z heights would be wrong. "
+            "Re-slice the model with the provided PrusaSlicer profile.")
 
     with open(input_file, 'r') as file:
         for line in file:

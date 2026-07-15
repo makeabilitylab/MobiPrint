@@ -7,7 +7,7 @@ import { Grid, CircularProgress, Typography, styled, Box, Slider, Button } from 
 import { useLongPress } from "use-long-press";
 import { floorObject } from "../../api/utils";
 import { distance2d } from "../../utils/touch_handling/TouchHandlingUtils";
-import { useAddPrintCommandMutation, useStartPrintQuery } from "../../api/mobiprinthooks";
+import { useAddPrintCommandMutation } from "../../api/mobiprinthooks";
 import axios from "axios";
 import { useSelectedFiles } from "../../../contexts/SelectedFilesContext";
 import { printerURL, getBackendURL } from "../../../config";
@@ -71,13 +71,6 @@ const PrintActions = (props) => {
         });
     }
 
-    // const { data: printStartData, isLoading } = useStartPrintQuery(printFile,[]);
-
-    // if (readyToPrint && !isLoading)  {
-    //     useStartPrintQuery(printFile,[]);
-
-    // }
- 
     const handleChange = (event, newValue) => {
         setValue(newValue);
         setPrintAngle(newValue);
